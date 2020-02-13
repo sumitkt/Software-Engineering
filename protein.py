@@ -1,4 +1,5 @@
 from mydb import *
+import re
 
 def parser(a):
     count=0
@@ -48,11 +49,18 @@ def start():
           if(geneseq!=''):
 
             if len(geneseq)%3==0:
-
-
               protein=parser(geneseq)
+              pattern="STOP"
+              match=re.findall(pattern,protein)
+              if (match.count("STOP")!=2):
+                my_cursor.execute(sql_records,(genename,geneseq,len(geneseq),protein,len(protein[:-3]),"Good"))
+              else:
+                my_cursor.execute(sql_records,(genename,geneseq,len(geneseq),protein,len(protein[:-3]),"BAD"))
+
+
+
               #print(genename,'\n',geneseq,'\n',len(geneseq),'\n',protein,'\n',len(protein[:-3]),"Good")
-              my_cursor.execute(sql_records,(genename,geneseq,len(geneseq),protein,len(protein[:-3]),"Good"))
+              
             else:
               protein=parser(geneseq)
               print(genename,'\n',geneseq,'\n',len(geneseq),'\n',protein,'\n',len(protein[:-3]),"BAD")
