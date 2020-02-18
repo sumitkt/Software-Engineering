@@ -41,11 +41,13 @@ def start():
 
   with open("Ecol_K12_MG1655_.txt",'r') as my_file:
     genename=''
+    gene_name=''
     geneseq=''
     protein=''
     for i in my_file:
         if(i[0]=='>'):
           genename=str(i[:-1])
+          #print(genen)
           if(geneseq!=''):
 
             if len(geneseq)%3==0:
@@ -53,9 +55,11 @@ def start():
               pattern="STOP"
               match=re.findall(pattern,protein)
               if (match.count("STOP")!=2):
-                my_cursor.execute(sql_records,(genename,geneseq,len(geneseq),protein,len(protein[:-3]),"Good"))
+                #print(genename,'\n',geneseq,'\n',len(geneseq),'\n',protein,'\n',len(protein[:-3]),"Good")
+                my_cursor.execute(sql_records,(gene_name,geneseq,len(geneseq),protein,len(protein[:-3]),"Good"))
               else:
-                my_cursor.execute(sql_records,(genename,geneseq,len(geneseq),protein,len(protein[:-3]),"BAD"))
+                #print(genename,'\n',geneseq,'\n',len(geneseq),'\n',protein,'\n',len(protein[:-3]),"Good")
+                my_cursor.execute(sql_records,(gene_name,geneseq,len(geneseq),protein,len(protein[:-3]),"BAD"))
 
 
 
@@ -63,14 +67,17 @@ def start():
               
             else:
               protein=parser(geneseq)
-              print(genename,'\n',geneseq,'\n',len(geneseq),'\n',protein,'\n',len(protein[:-3]),"BAD")
-              my_cursor.execute(sql_records,(genename,geneseq,len(geneseq),protein,len(protein[:-3]),"BAD"))
+              #print(genename,'\n',geneseq,'\n',len(geneseq),'\n',protein,'\n',len(protein[:-3]),"BAD")
+              my_cursor.execute(sql_records,(gene_name,geneseq,len(geneseq),protein,len(protein[:-3]),"BAD"))
 
 
           geneseq=''
           protein=''
         else:
           geneseq=geneseq+str(i[:-1])
+          gene_name=genename;
+
+
     #print(genename,'\n',geneseq,'\n',len(geneseq),'\n',parser(geneseq),len(parser(geneseq)[:-3]),"Good")
     #my_cursor.execute(sql_records,(genename,geneseq,len(geneseq),parser(geneseq),len(parser(geneseq)[:-3]),"Good"))
     mydb.commit()
